@@ -187,8 +187,9 @@ comparativo.show(10, truncate=False)
 
 # MAGIC %sql
 # MAGIC -- Análisis completo de inventario con punto de reorden
+# MAGIC -- dim_inventario se une a dim_producto (no a fact_ventas directamente)
 # MAGIC SELECT
-# MAGIC     i.id_producto,
+# MAGIC     p.id_producto,
 # MAGIC     p.categoria,
 # MAGIC     p.marca,
 # MAGIC     i.cantidad_disponible       AS stock_actual,
@@ -200,22 +201,23 @@ comparativo.show(10, truncate=False)
 # MAGIC     ROUND(i.cantidad_disponible / NULLIF(i.demanda_diaria, 0), 0)
 # MAGIC                                 AS dias_cobertura,
 # MAGIC     i.estado_inventario
-# MAGIC FROM electrotech_gold.dim_inventario i
-# MAGIC LEFT JOIN electrotech_gold.dim_producto p ON i.id_producto = p.id_producto
+# MAGIC FROM electrotech_gold.dim_producto p
+# MAGIC JOIN electrotech_gold.dim_inventario i ON p.id_producto = i.id_producto
 # MAGIC ORDER BY i.demanda_diaria DESC, i.cantidad_disponible ASC;
 
 # COMMAND ----------
 
 # MAGIC %sql
 # MAGIC -- Productos SIN ventas en el período (inventario inmovilizado)
+# MAGIC -- JOIN a través de dim_producto → dim_inventario
 # MAGIC SELECT
-# MAGIC     i.id_producto,
+# MAGIC     p.id_producto,
 # MAGIC     p.categoria,
 # MAGIC     p.marca,
 # MAGIC     i.cantidad_disponible,
 # MAGIC     'Sin movimiento' AS estado
-# MAGIC FROM electrotech_gold.dim_inventario i
-# MAGIC LEFT JOIN electrotech_gold.dim_producto p ON i.id_producto = p.id_producto
+# MAGIC FROM electrotech_gold.dim_producto p
+# MAGIC JOIN electrotech_gold.dim_inventario i ON p.id_producto = i.id_producto
 # MAGIC WHERE i.total_vendido = 0
 # MAGIC ORDER BY i.cantidad_disponible DESC;
 

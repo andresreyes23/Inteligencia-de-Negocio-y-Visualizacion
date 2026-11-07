@@ -101,7 +101,7 @@
 
 # MAGIC %sql
 # MAGIC SELECT
-# MAGIC     i.id_producto AS `ID`,
+# MAGIC     p.id_producto AS `ID`,
 # MAGIC     p.categoria AS `Categoría`,
 # MAGIC     i.cantidad_disponible AS `Stock Actual`,
 # MAGIC     i.tiempo_reposicion_dias AS `Días Reposición`,
@@ -109,8 +109,8 @@
 # MAGIC     i.punto_reorden AS `Punto Reorden`,
 # MAGIC     ROUND(i.cantidad_disponible / NULLIF(i.demanda_diaria, 0), 0) AS `Días Cobertura`,
 # MAGIC     i.estado_inventario AS `Estado`
-# MAGIC FROM electrotech_gold.dim_inventario i
-# MAGIC LEFT JOIN electrotech_gold.dim_producto p ON i.id_producto = p.id_producto
+# MAGIC FROM electrotech_gold.dim_producto p
+# MAGIC JOIN electrotech_gold.dim_inventario i ON p.id_producto = i.id_producto
 # MAGIC WHERE i.total_vendido > 0
 # MAGIC ORDER BY i.demanda_diaria DESC;
 

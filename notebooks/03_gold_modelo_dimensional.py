@@ -8,20 +8,29 @@
 # MAGIC ## Modelo Estrella
 # MAGIC
 # MAGIC ```
-# MAGIC                  dim_tiempo
-# MAGIC                      |
-# MAGIC  dim_cliente ── fact_ventas ── dim_producto
-# MAGIC                      |
-# MAGIC                 dim_inventario
+# MAGIC                     dim_tiempo
+# MAGIC                         |
+# MAGIC  dim_cliente ── fact_ventas ── dim_producto ── dim_inventario
 # MAGIC ```
+# MAGIC
+# MAGIC **Relaciones:**
+# MAGIC - `fact_ventas` → `dim_cliente`   por `id_cliente`   (muchos a uno)
+# MAGIC - `fact_ventas` → `dim_producto`  por `id_producto`  (muchos a uno)
+# MAGIC - `fact_ventas` → `dim_tiempo`    por `fecha_venta`  (muchos a uno)
+# MAGIC - `dim_producto` → `dim_inventario` por `id_producto` (uno a uno)
+# MAGIC
+# MAGIC > `dim_inventario` se relaciona con `dim_producto`, NO con `fact_ventas`.
+# MAGIC > Ambas tablas describen el mismo producto desde ángulos distintos.
+# MAGIC > La relación `fact_ventas → dim_inventario` directa crearía un camino
+# MAGIC > ambiguo en el modelo.
 # MAGIC
 # MAGIC | Tabla | Tipo | Descripción |
 # MAGIC |-------|------|-------------|
 # MAGIC | fact_ventas | Hecho | Transacciones de ventas con métricas |
-# MAGIC | dim_producto | Dimensión | Catálogo de productos |
+# MAGIC | dim_producto | Dimensión | Catálogo de productos (precio, categoría, marca) |
 # MAGIC | dim_cliente | Dimensión | Catálogo de clientes |
 # MAGIC | dim_tiempo | Dimensión | Calendario |
-# MAGIC | dim_inventario | Dimensión | Estado del inventario |
+# MAGIC | dim_inventario | Dimensión | Stock y tiempo de reposición por producto |
 
 # COMMAND ----------
 # MAGIC %md
